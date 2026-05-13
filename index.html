@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parsa Hassas — Data Analytics Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #07101f;
+      --bg-alt:    #0c1526;
+      --bg-card:   #101e33;
+      --bg-hover:  #132540;
+      --accent:    #3b82f6;
+      --accent-lt: #60a5fa;
+      --glow:      rgba(59,130,246,0.12);
+      --t1:        #f1f5f9;
+      --t2:        #94a3b8;
+      --t3:        #64748b;
+      --border:    rgba(255,255,255,0.07);
+      --border-b:  rgba(59,130,246,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--t1);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+    a { color: var(--accent-lt); text-decoration: none; transition: color .2s; }
+    a:hover { color: #fff; }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 2rem; }
+    section { padding: 5.5rem 0; }
+
+    .eyebrow {
+      font-size: .72rem; font-weight: 600; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: .6rem;
+    }
+    .sec-title { font-size: 1.95rem; color: var(--t1); margin-bottom: .4rem; }
+    .sec-sub   { color: var(--t2); max-width: 520px; margin-bottom: 3rem; font-size: .95rem; }
+
+    /* ─── Divider ─── */
+    .div { height: 1px; background: var(--border); }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(7,16,31,.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: .9rem 2rem;
+    }
+    .nav-in {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.05rem; color:var(--t1); }
+    .logo span { color: var(--accent); }
+    .nav-links { display:flex; gap:1.8rem; list-style:none; }
+    .nav-links a { color:var(--t2); font-size:.85rem; font-weight:500; transition:color .2s; }
+    .nav-links a:hover { color:var(--t1); }
+
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100vh; display:flex; align-items:center;
+      padding-top: 5rem; position:relative; overflow:hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; top:-180px; right:-220px;
+      width:640px; height:640px;
+      background: radial-gradient(circle, rgba(59,130,246,.07) 0%, transparent 68%);
+      pointer-events:none;
+    }
+    .hero::after {
+      content:''; position:absolute; bottom:-100px; left:-180px;
+      width:480px; height:480px;
+      background: radial-gradient(circle, rgba(59,130,246,.04) 0%, transparent 68%);
+      pointer-events:none;
+    }
+    .hero-body { position:relative; z-index:1; }
+
+    .hero-greet {
+      display:flex; align-items:center; gap:.6rem;
+      font-size:.82rem; font-weight:600; letter-spacing:.12em;
+      color:var(--accent); margin-bottom:1rem;
+    }
+    .hero-greet::before {
+      content:''; display:inline-block;
+      width:2rem; height:1px; background:var(--accent);
+    }
+    .hero-name {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.6rem,6vw,4.6rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -.045em;
+      margin-bottom: 1rem;
+      background: linear-gradient(120deg, #f8fafc 0%, #dbeafe 40%, #60a5fa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 28px rgba(96,165,250,.10);
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(18px);
+      animation: nameFadeUp 1.05s cubic-bezier(.2,.8,.2,1) .28s forwards;
+    }
+    @keyframes nameFadeUp {
+      0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(18px);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-name { animation: none; opacity: 1; filter: blur(0); transform: none; }
+    }
+    .hero-sub {
+      font-size: clamp(.95rem,2.2vw,1.2rem);
+      font-weight:400; color:var(--t2);
+      margin-bottom:1.4rem; max-width:600px;
+    }
+    .hero-desc {
+      color:var(--t2); max-width:530px;
+      margin-bottom:2.5rem; font-size:.97rem;
+    }
+    .hero-btns { display:flex; gap:.9rem; flex-wrap:wrap; }
+
+    .btn {
+      padding:.72rem 1.65rem; border-radius:8px;
+      font-weight:600; font-size:.87rem;
+      transition:all .22s; display:inline-flex;
+      align-items:center; gap:.4rem; cursor:pointer;
+    }
+    .btn-blue {
+      background:var(--accent); color:#fff; border:none;
+    }
+    .btn-blue:hover {
+      background:var(--accent-lt); color:#fff;
+      transform:translateY(-2px);
+      box-shadow:0 8px 28px rgba(59,130,246,.35);
+    }
+    .btn-ghost {
+      background:transparent; color:var(--t1);
+      border:1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color:var(--accent);
+      color:var(--accent-lt);
+      transform:translateY(-2px);
+    }
+
+    .hero-stats {
+      display:flex; gap:2.8rem;
+      margin-top:3rem; padding-top:3rem;
+      border-top:1px solid var(--border);
+    }
+    .stat-val {
+      font-family:'Space Grotesk', sans-serif;
+      font-size:2rem; font-weight:700; color:var(--accent-lt);
+    }
+    .stat-lbl { font-size:.75rem; color:var(--t3); margin-top:.1rem; }
+
+    /* ─── Cards ─── */
+    .card {
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:12px; padding:1.65rem;
+      transition:all .28s;
+    }
+    .card:hover {
+      border-color:var(--border-b);
+      background:var(--bg-hover);
+      transform:translateY(-3px);
+      box-shadow:0 14px 44px rgba(0,0,0,.32);
+    }
+
+    /* ─── Skills ─── */
+    .skills-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:1.4rem; }
+    .cat-lbl { font-size:.7rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.85rem; }
+    .tags { display:flex; flex-wrap:wrap; gap:.45rem; }
+    .tag {
+      background:rgba(59,130,246,.09);
+      border:1px solid rgba(59,130,246,.22);
+      color:var(--accent-lt);
+      padding:.32rem .72rem; border-radius:6px;
+      font-size:.78rem; font-weight:500;
+      transition:background .2s;
+    }
+    .tag:hover { background:rgba(59,130,246,.18); }
+
+    /* ─── Projects ─── */
+    .proj-grid { display:grid; gap:2rem; }
+
+    .proj-card {
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:16px; padding:2.2rem;
+      transition:all .3s; position:relative; overflow:hidden;
+    }
+    .proj-card::before {
+      content:''; position:absolute;
+      top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,var(--accent),transparent);
+      opacity:0; transition:opacity .3s;
+    }
+    .proj-card:hover {
+      border-color:var(--border-b);
+      background:var(--bg-hover);
+      transform:translateY(-4px);
+      box-shadow:0 22px 64px rgba(0,0,0,.42);
+    }
+    .proj-card:hover::before { opacity:1; }
+
+    .proj-num { font-size:.7rem; font-weight:600; color:var(--accent); letter-spacing:.12em; margin-bottom:.7rem; }
+    .proj-title { font-size:1.38rem; margin-bottom:.4rem; }
+    .proj-sub { font-size:.87rem; color:var(--accent-lt); font-weight:500; margin-bottom:1rem; }
+
+    /* First paragraph — brighter, slightly larger to open the card */
+    .proj-lead {
+      color: #cee0f8;
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.78;
+      margin-bottom: 1.4rem;
+    }
+
+    /* Last paragraph — key findings, accented left border */
+    .proj-finding {
+      color: #b8d4f0;
+      font-size: .9rem;
+      line-height: 1.78;
+      margin-top: 1.2rem;
+      margin-bottom: 1.5rem;
+      padding: .9rem 1.1rem;
+      border-left: 2px solid var(--accent);
+      background: rgba(59,130,246,.06);
+      border-radius: 0 8px 8px 0;
+    }
+    .proj-finding strong { color: #e2eeff; font-weight: 600; }
+
+    .proj-bullets { margin-bottom: 0; display:flex; flex-direction:column; gap:.3rem; }
+    .proj-bullet {
+      color:var(--t2); font-size:.86rem;
+      display:flex; align-items:flex-start; gap:.55rem;
+    }
+    .proj-bullet::before { content:'→'; color:var(--accent); flex-shrink:0; margin-top:.05rem; }
+
+    .proj-foot {
+      display:flex; justify-content:space-between;
+      align-items:center; flex-wrap:wrap; gap:.9rem;
+      padding-top:1.4rem; border-top:1px solid var(--border);
+    }
+    .proj-links { display:flex; gap:1.2rem; }
+    .proj-lnk {
+      font-size:.84rem; font-weight:500;
+      color:var(--accent-lt);
+      display:flex; align-items:center; gap:.3rem;
+      transition:color .2s;
+    }
+    .proj-lnk:hover { color:#fff; }
+    .proj-lnk.dim { color:var(--t3); cursor:default; }
+    .proj-lnk.dim:hover { color:var(--t3); }
+
+    .badge {
+      display:inline-flex; align-items:center;
+      background:rgba(59,130,246,.08);
+      border:1px solid rgba(59,130,246,.2);
+      color:var(--accent-lt);
+      padding:.28rem .75rem; border-radius:100px;
+      font-size:.75rem; font-weight:500;
+    }
+
+    /* ─── Timeline ─── */
+    .timeline { position:relative; }
+    .timeline::before {
+      content:''; position:absolute;
+      left:0; top:0; bottom:0;
+      width:1px; background:var(--border);
+    }
+    .t-item { padding-left:2rem; padding-bottom:2.4rem; position:relative; }
+    .t-item:last-child { padding-bottom:0; }
+    .t-dot {
+      position:absolute; left:-5px; top:6px;
+      width:11px; height:11px;
+      border-radius:50%; background:var(--accent);
+      border:2px solid var(--bg);
+    }
+    .t-date  { font-size:.78rem; color:var(--accent); font-weight:500; margin-bottom:.3rem; }
+    .t-role  { font-size:1.02rem; font-weight:600; margin-bottom:.18rem; }
+    .t-co    { font-size:.88rem; color:var(--t2); margin-bottom:.65rem; }
+    .t-desc  { color:var(--t3); font-size:.86rem; line-height:1.72; }
+
+    /* ─── Education ─── */
+    .edu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.4rem; }
+    .edu-deg  { font-size:.7rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.45rem; }
+    .edu-uni  { font-size:1.18rem; font-weight:700; margin-bottom:.22rem; }
+    .edu-fld  { color:var(--t2); font-size:.88rem; margin-bottom:.4rem; }
+    .edu-dt   { color:var(--t3); font-size:.78rem; }
+
+    /* ─── Certs ─── */
+    .certs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:.95rem; }
+    .cert-card {
+      display:flex; align-items:center; gap:1rem;
+      padding:1.2rem 1.45rem; text-decoration:none; color:inherit;
+    }
+    .cert-ico {
+      width:36px; height:36px; border-radius:8px;
+      background:var(--glow);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.05rem; flex-shrink:0;
+    }
+    .cert-name { font-size:.855rem; font-weight:500; color:var(--t1); line-height:1.38; }
+    .cert-src  { font-size:.73rem; color:var(--t3); margin-top:.14rem; }
+    .cert-arr  { margin-left:auto; color:var(--t3); flex-shrink:0; font-size:.9rem; transition:color .2s; }
+    .cert-card:hover .cert-arr { color:var(--accent); }
+    .cert-note { color:var(--t3); font-size:.75rem; margin-top:1rem; font-style:italic; }
+
+    /* ─── Contact ─── */
+    .contact-section { background:var(--bg-alt); }
+    .contact-grid { display:flex; flex-wrap:wrap; gap:2.5rem; }
+    .c-item { display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; }
+    .c-ico {
+      width:40px; height:40px; background:var(--glow);
+      border-radius:8px; display:flex; align-items:center;
+      justify-content:center; font-size:1.1rem; flex-shrink:0;
+    }
+    .c-lbl { font-size:.73rem; color:var(--t3); margin-bottom:.1rem; }
+    .c-val { font-size:.9rem; color:var(--t1); font-weight:500; }
+
+    /* ─── Footer ─── */
+    footer {
+      background:var(--bg); border-top:1px solid var(--border);
+      padding:1.8rem 2rem; text-align:center;
+      color:var(--t3); font-size:.82rem;
+    }
+
+    /* ─── Scroll Progress Bar ─── */
+    #scroll-prog {
+      position: fixed; top: 0; left: 0;
+      height: 2px; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-lt));
+      z-index: 9999;
+      transition: width .08s linear;
+      pointer-events: none;
+    }
+
+    /* ─── Chart containers ─── */
+    .chart-wrap {
+      margin: 1.5rem 0 1.2rem;
+      background: rgba(59,130,246,.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.2rem .8rem;
+    }
+    .chart-title {
+      font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: .9rem;
+    }
+
+    /* ─── Reveal animation ─── */
+    .r { opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
+    .r.on { opacity:1; transform:translateY(0); }
+
+    /* ─── Responsive ─── */
+    @media(max-width:760px) {
+      .nav-links { display:none; }
+      .hero-stats { flex-wrap:wrap; gap:1.6rem; }
+      .proj-foot { flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="scroll-prog"></div>
+
+<!-- ═══════════════════════════════════════════
+     NAV
+════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-in">
+    <div class="logo">Parsa<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-body">
+      <div class="hero-greet">Hello, I'm</div>
+      <h1 class="hero-name">Parsa Hassas</h1>
+      <p class="hero-sub">Business Analytics &nbsp;·&nbsp; Data Analytics &amp; ML &nbsp;·&nbsp; Python &nbsp;·&nbsp; SQL &nbsp;·&nbsp; Power BI</p>
+      <p class="hero-desc">
+        I bridge an Electrical Engineering foundation with applied data analytics —
+        building end-to-end workflows from raw data pipelines to statistical models
+        and interactive dashboards. Currently based in Toronto, open to analytics
+        roles and research collaborations.
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-blue">View Projects</a>
+        <a href="#contact"  class="btn btn-ghost">Get In Touch</a>
+        <a href="https://github.com/Parsa-Hassas" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+        <a href="https://www.linkedin.com/in/parsa-hassassedighi" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-val" data-target="2">0</div><div class="stat-lbl">Featured Projects</div></div>
+        <div><div class="stat-val" data-target="9">0</div><div class="stat-lbl">Certifications</div></div>
+        <div><div class="stat-val" data-target="2">0</div><div class="stat-lbl">Degrees</div></div>
+        <div><div class="stat-val" data-target="50000" data-suffix="K">0</div><div class="stat-lbl">Titles in ML Pipeline</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ═══════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════════ -->
+<section id="about">
+  <div class="container r">
+    <div class="eyebrow">About Me</div>
+    <h2 class="sec-title">Structured thinking, practical analytics</h2>
+    <p style="color:var(--t2);max-width:700px;font-size:.97rem;line-height:1.85;margin-top:.6rem;">
+      I'm a Business Analytics student at <strong style="color:var(--t1);">Seneca Polytechnic</strong>
+      with a B.Eng. in Electrical &amp; Electronics Engineering from
+      <strong style="color:var(--t1);">Iran University of Science &amp; Technology (IUST)</strong>.
+      My engineering background shaped how I approach problems: systematically, with attention to
+      data quality, model validity, and communicable results. I'm currently focused on analytics
+      projects involving data preparation, regime-based modeling, machine learning, and dashboard design —
+      and I'm actively looking for a role where I can apply these skills in a real-world data team.
+    </p>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ═══════════════════════════════════════════
+     SKILLS
+════════════════════════════════════════════ -->
+<section id="skills">
+  <div class="container">
+    <div class="eyebrow r">Skills &amp; Tools</div>
+    <h2 class="sec-title r">Technical Stack</h2>
+    <p class="sec-sub r">Languages, frameworks, and platforms I work with.</p>
+
+    <div class="skills-grid">
+      <div class="card r">
+        <div class="cat-lbl">Languages</div>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">SQL</span>
+          <span class="tag">SAS</span>
+        </div>
+      </div>
+      <div class="card r">
+        <div class="cat-lbl">Data &amp; ML Libraries</div>
+        <div class="tags">
+          <span class="tag">pandas</span>
+          <span class="tag">NumPy</span>
+          <span class="tag">scikit-learn</span>
+          <span class="tag">NLP / Embeddings</span>
+          <span class="tag">Matplotlib / Seaborn</span>
+        </div>
+      </div>
+      <div class="card r">
+        <div class="cat-lbl">Statistical Modeling</div>
+        <div class="tags">
+          <span class="tag">OLS Regression</span>
+          <span class="tag">Ridge &amp; Lasso</span>
+          <span class="tag">Stepwise Selection</span>
+          <span class="tag">K-Means Clustering</span>
+          <span class="tag">PCA</span>
+        </div>
+      </div>
+      <div class="card r">
+        <div class="cat-lbl">Visualization &amp; BI</div>
+        <div class="tags">
+          <span class="tag">Tableau</span>
+          <span class="tag">Power BI</span>
+          <span class="tag">Dash / Plotly</span>
+          <span class="tag">Excel &amp; Cognos</span>
+        </div>
+      </div>
+      <div class="card r">
+        <div class="cat-lbl">Data Engineering</div>
+        <div class="tags">
+          <span class="tag">API Integration</span>
+          <span class="tag">Data Pipelines</span>
+          <span class="tag">ETL &amp; Cleaning</span>
+          <span class="tag">Feature Engineering</span>
+          <span class="tag">Databases (SQL)</span>
+        </div>
+      </div>
+      <div class="card r">
+        <div class="cat-lbl">Tools &amp; Workflow</div>
+        <div class="tags">
+          <span class="tag">Git &amp; GitHub</span>
+          <span class="tag">Jupyter</span>
+          <span class="tag">VS Code</span>
+          <span class="tag">Microsoft Excel</span>
+          <span class="tag">Agile</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ═══════════════════════════════════════════
+     PROJECTS
+════════════════════════════════════════════ -->
+<section id="projects">
+  <div class="container">
+    <div class="eyebrow r">Featured Work</div>
+    <h2 class="sec-title r">Projects</h2>
+    <p class="sec-sub r">End-to-end analytics projects — from raw data pipelines to deployed tools and actionable insights.</p>
+
+    <div class="proj-grid">
+
+      <!-- ── TTC ── -->
+      <div class="proj-card r">
+        <div class="proj-num">PROJECT 01</div>
+        <h3 class="proj-title">TTC Ridership Recovery &amp; Changing Travel Patterns</h3>
+        <p class="proj-sub">Regime-Based Transit Analysis &nbsp;·&nbsp; Python &nbsp;·&nbsp; SAS &nbsp;·&nbsp; Tableau &nbsp;·&nbsp; Dash</p>
+        <p class="proj-lead">
+          A structured analytical study of Toronto TTC monthly ridership across three COVID-era regimes.
+          The project goes beyond descriptive charts to reveal how the <em>structure</em> of demand fundamentally
+          shifted — which variables drove ridership, and by how much, changed entirely depending on the period.
+        </p>
+        <div class="proj-bullets">
+          <div class="proj-bullet">Built a 179-observation monthly dataset by merging TTC ridership, gas prices, unemployment rates, and weather data from four open government sources.</div>
+          <div class="proj-bullet">Applied OLS regression, stepwise selection, Ridge, and Lasso independently across three regime subsets (Pre-COVID, COVID/Recovery, Post-COVID) to compare variable importance.</div>
+          <div class="proj-bullet">Post-COVID ridership recovered to 76.5% of pre-COVID levels — a structural shift, not just a volume gap.</div>
+          <div class="proj-bullet">Designed two Tableau dashboards (executive and technical) and deployed an interactive Dash app on Render for live exploration.</div>
+        </div>
+
+        <!-- Chart 1: Ridership Recovery -->
+        <div class="chart-wrap">
+          <div class="chart-title">Average Monthly Ridership by Regime</div>
+          <canvas id="chartRidership" height="100"></canvas>
+        </div>
+
+        <div class="proj-finding">
+          <strong>Key finding:</strong> Pre-COVID ridership was governed by annual seasonal memory (ridership_lag12).
+          During COVID/Recovery it became reactive to gas prices and short-run momentum.
+          Post-COVID shows partial normalization — seasonal structure returned, but with new unemployment
+          and weather sensitivity. The pandemic didn't just reduce ridership; it changed what drives it.
+        </div>
+        <div class="tags" style="margin-bottom:1.5rem;">
+          <span class="tag">Python</span>
+          <span class="tag">SAS (PROC REG)</span>
+          <span class="tag">Tableau</span>
+          <span class="tag">Dash / Plotly</span>
+          <span class="tag">Ridge &amp; Lasso</span>
+          <span class="tag">Feature Engineering</span>
+          <span class="tag">Regime Analysis</span>
+          <span class="tag">Time Series</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="https://github.com/Parsa-Hassas/-ttc-ridership-dashboard" target="_blank" class="proj-lnk">↗ GitHub Repo</a>
+            <a href="https://ttc-ridership-dashboard.onrender.com" target="_blank" class="proj-lnk">↗ Live Dashboard</a>
+          </div>
+          <span class="badge">Transit Analytics</span>
+        </div>
+      </div>
+
+      <!-- ── Watchlist ── -->
+      <div class="proj-card r">
+        <div class="proj-num">PROJECT 02</div>
+        <h3 class="proj-title">The Watchlist — Movie Recommendation System</h3>
+        <p class="proj-sub">Personalized ML Recommender &nbsp;·&nbsp; Python &nbsp;·&nbsp; NLP &nbsp;·&nbsp; Clustering &nbsp;·&nbsp; API Engineering</p>
+        <p class="proj-lead">
+          An end-to-end personalized movie recommendation system built from scratch to address the
+          limitations of platform-specific recommenders: limited cross-platform discovery, filter-bubble
+          behavior, and poor explainability. The system models user taste across multiple cinematic
+          dimensions and ranks candidates from a 50,000-title pool.
+        </p>
+        <div class="proj-bullets">
+          <div class="proj-bullet">Engineered an automated multi-source data pipeline integrating TMDb API, Wikipedia plot summaries (with multilingual fallback &amp; translation), and IMDb ratings across a 50,000-title candidate pool.</div>
+          <div class="proj-bullet">Built a scalable two-pass enrichment architecture: fast TMDb enrichment for all 50K rows, then selective Wikipedia enrichment only for low-confidence records — minimizing API cost while maximizing coverage.</div>
+          <div class="proj-bullet">Created four aspect-specific text representations per movie (theme, mood, style, context) and computed dense semantic embeddings for each channel separately.</div>
+          <div class="proj-bullet">Modeled user taste via centered rating vectors and soft overlapping "taste streams" using PCA + K-Means clustering — capturing that users have multiple preference lanes, not one flat profile.</div>
+          <div class="proj-bullet">Final scoring framework combines aspect-level similarity, stream alignment, negative-preference penalties, and IMDb-based cinematic quality weighting for selective, explainable recommendations.</div>
+        </div>
+        <div class="proj-finding">
+          <strong>Key outcome:</strong> The system successfully moves beyond single-platform, trend-driven suggestions
+          by modeling taste as overlapping preference streams rather than a flat profile. Recommendations scored
+          against both personal fit and cinematic quality — surfacing niche films a standard recommender would
+          never surface, with explainability built into every ranking decision.
+        </div>
+        <div class="tags" style="margin-bottom:1.5rem;">
+          <span class="tag">Python</span>
+          <span class="tag">NLP / Embeddings</span>
+          <span class="tag">K-Means Clustering</span>
+          <span class="tag">PCA</span>
+          <span class="tag">API Integration</span>
+          <span class="tag">Data Pipeline</span>
+          <span class="tag">Recommender Systems</span>
+          <span class="tag">TMDb / IMDb / Wikipedia</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <span class="proj-lnk dim">GitHub — Coming Soon</span>
+          </div>
+          <span class="badge">Machine Learning</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ═══════════════════════════════════════════
+     EXPERIENCE
+════════════════════════════════════════════ -->
+<section id="experience">
+  <div class="container">
+    <div class="eyebrow r">Work History</div>
+    <h2 class="sec-title r">Experience</h2>
+    <p class="sec-sub r">Professional background spanning engineering, data analysis, and editorial leadership.</p>
+    <div class="timeline r">
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-date">Mar 2025 – Jan 2026 &nbsp;·&nbsp; 11 months</div>
+        <div class="t-role">Customer Service Representative</div>
+        <div class="t-co">TAGHZIE Electronics &nbsp;·&nbsp; Canada</div>
+        <div class="t-desc">Evaluated and analyzed client profiles to identify potential risks and ensure accurate data reporting. Researched market trends and conditions to inform client interactions. Maintained detailed documentation of customer inquiries and resolutions, ensuring organized workflows.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-date">Jun 2023 – Dec 2024 &nbsp;·&nbsp; 1 yr 7 mo</div>
+        <div class="t-role">Electrical Engineer</div>
+        <div class="t-co">Power Supply Production &nbsp;·&nbsp; Tehran, Iran</div>
+        <div class="t-desc">Designed and tested electrical circuits, ensuring compliance with industry standards and safety regulations. Analyzed performance metrics and optimized product designs to enhance functionality. Collaborated with cross-functional teams to streamline production processes and reduce costs.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-dot"></div>
+        <div class="t-date">May 2023 – Dec 2024 &nbsp;·&nbsp; 1 yr 8 mo</div>
+        <div class="t-role">Editor in Chief</div>
+        <div class="t-co">Sarv Student Magazine — Culture, Art &amp; Literature</div>
+        <div class="t-desc">Analyzed and reviewed data for discrepancies in editorial workflows, ensuring accuracy and integrity. Created documentation to streamline internal processes and enhance operational efficiency. Conducted detailed research on cultural and market trends to ensure high-quality publications.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ═══════════════════════════════════════════
+     EDUCATION
+════════════════════════════════════════════ -->
+<section id="education">
+  <div class="container">
+    <div class="eyebrow r">Academic Background</div>
+    <h2 class="sec-title r">Education</h2>
+    <p class="sec-sub r">Interdisciplinary foundation combining engineering rigor with applied business analytics.</p>
+    <div class="edu-grid">
+      <div class="card r">
+        <div class="edu-deg">Postgraduate Certificate</div>
+        <div class="edu-uni">Seneca Polytechnic</div>
+        <div class="edu-fld">Business Analytics</div>
+        <div class="edu-dt">Started January 2026 &nbsp;·&nbsp; In Progress &nbsp;·&nbsp; Toronto, Canada</div>
+      </div>
+      <div class="card r">
+        <div class="edu-deg">Bachelor of Engineering</div>
+        <div class="edu-uni">Iran University of Science &amp; Technology (IUST)</div>
+        <div class="edu-fld">Electrical &amp; Electronics Engineering</div>
+        <div class="edu-dt">September 2019 – January 2024 &nbsp;·&nbsp; Tehran, Iran</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ═══════════════════════════════════════════
+     CERTIFICATIONS
+════════════════════════════════════════════ -->
+<section id="certifications">
+  <div class="container">
+    <div class="eyebrow r">Credentials</div>
+    <h2 class="sec-title r">Certifications</h2>
+    <p class="sec-sub r">Professional development through IBM, Coursera, and LinkedIn Learning programs.</p>
+
+    <div class="certs-grid">
+      <a href="https://coursera.org/share/56e53d869bc3050b0a4e34c5bb45df9d" target="_blank" class="card cert-card r">
+        <div class="cert-ico">📉</div>
+        <div>
+          <div class="cert-name">Data Visualization with Python</div>
+          <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://coursera.org/share/3e1d0071c853b6289de7fe12c47058ea" target="_blank" class="card cert-card r">
+        <div class="cert-ico">🔬</div>
+        <div>
+          <div class="cert-name">Data Analysis with Python</div>
+          <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://coursera.org/share/ad7ef3cda02215dba6ea98e2fa32d928" target="_blank" class="card cert-card r">
+        <div class="cert-ico">🗄️</div>
+        <div>
+          <div class="cert-name">Databases and SQL for Data Science with Python</div>
+          <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://coursera.org/share/70c7dd26aa1982ce07e9d74b5b4308a6" target="_blank" class="card cert-card r">
+        <div class="cert-ico">🐍</div>
+        <div>
+          <div class="cert-name">Python Project for Data Science</div>
+          <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://coursera.org/share/53dd120f0d42f6fdb309659656177bd7" target="_blank" class="card cert-card r">
+        <div class="cert-ico">🤖</div>
+        <div>
+          <div class="cert-name">Python for Data Science, AI &amp; Development</div>
+          <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://coursera.org/share/be870654add8811f84f04f679a5d37cd" target="_blank" class="card cert-card r">
+        <div class="cert-ico">📈</div>
+        <div>
+          <div class="cert-name">Data Visualization and Dashboards with Excel and Cognos</div>
+          <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://coursera.org/share/c0d5b5f6070eb661ece8ec6041efb402" target="_blank" class="card cert-card r">
+        <div class="cert-ico">📊</div>
+        <div>
+          <div class="cert-name">Data Analysis and Visualization Foundations</div>
+          <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://www.linkedin.com/learning/certificates/7e6d1e790d274ad6059ac09633e6a9fd1ea91510b8113908569df2cd94b9d5c4?trk=share_certificate" target="_blank" class="card cert-card r">
+        <div class="cert-ico">⚡</div>
+        <div>
+          <div class="cert-name">Lean Foundations</div>
+          <div class="cert-src">LinkedIn Learning</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+      <a href="https://www.linkedin.com/learning/certificates/c34187bdaea0b1b4f0f807f81b2e7efedd5cd581ebc3b52a236811792b1a854b?trk=share_certificate" target="_blank" class="card cert-card r">
+        <div class="cert-ico">🔄</div>
+        <div>
+          <div class="cert-name">Agile Development in the New World of Work</div>
+          <div class="cert-src">LinkedIn Learning</div>
+        </div>
+        <div class="cert-arr">↗</div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ═══════════════════════════════════════════
+     CONTACT
+════════════════════════════════════════════ -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="eyebrow r">Get In Touch</div>
+    <h2 class="sec-title r">Contact</h2>
+    <p class="sec-sub r">Open to data analytics roles, internships, and research collaborations.</p>
+    <div class="contact-grid r">
+      <div>
+        <div class="c-item">
+          <div class="c-ico">✉️</div>
+          <div>
+            <div class="c-lbl">Email</div>
+            <a href="mailto:hassasparsa@gmail.com" class="c-val">hassasparsa@gmail.com</a>
+          </div>
+        </div>
+        <div class="c-item">
+          <div class="c-ico">📱</div>
+          <div>
+            <div class="c-lbl">Phone</div>
+            <div class="c-val">+1 (647) 760-4706</div>
+          </div>
+        </div>
+        <div class="c-item">
+          <div class="c-ico">💼</div>
+          <div>
+            <div class="c-lbl">LinkedIn</div>
+            <a href="https://www.linkedin.com/in/parsa-hassassedighi" target="_blank" class="c-val">linkedin.com/in/parsa-hassassedighi</a>
+          </div>
+        </div>
+        <div class="c-item">
+          <div class="c-ico">🐙</div>
+          <div>
+            <div class="c-lbl">GitHub</div>
+            <a href="https://github.com/Parsa-Hassas" target="_blank" class="c-val">github.com/Parsa-Hassas</a>
+          </div>
+        </div>
+        <div class="c-item">
+          <div class="c-ico">📍</div>
+          <div>
+            <div class="c-lbl">Location</div>
+            <div class="c-val">Toronto, Canada</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <div>© 2025 Parsa Hassas &nbsp;·&nbsp; Built for the next opportunity.</div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     SCROLL REVEAL + PROGRESS + COUNTERS + CHARTS
+════════════════════════════════════════════ -->
+<script>
+/* ── Scroll reveal ── */
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+/* ── Scroll progress bar ── */
+const prog = document.getElementById('scroll-prog');
+window.addEventListener('scroll', () => {
+  const scrolled = document.documentElement.scrollTop;
+  const total    = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  prog.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+}, { passive: true });
+
+/* ── Animated number counters ── */
+function animateCounters() {
+  document.querySelectorAll('.stat-val[data-target]').forEach(el => {
+    const target = +el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    const duration = 1400;
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(ease * target);
+      if (suffix === 'K') {
+        el.textContent = val >= 1000 ? Math.round(val / 1000) + 'K' : val;
+      } else {
+        el.textContent = val;
+      }
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+/* Trigger counters after a short delay on page load */
+window.addEventListener('load', () => setTimeout(animateCounters, 350));
+
+/* ── Ridership Recovery Chart ── */
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11;
+
+/* Custom plugin: value labels on top of each bar */
+const topLabelPlugin = {
+  id: 'topLabel',
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((ds, i) => {
+      chart.getDatasetMeta(i).data.forEach((bar, idx) => {
+        const val = ds.data[idx];
+        if (!val) return;
+        const label = val >= 1e6
+          ? (val / 1e6).toFixed(2) + 'M'
+          : Math.round(val / 1000) + 'K';
+        ctx.save();
+        ctx.fillStyle = '#cde4ff';
+        ctx.font = '600 11px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(label, bar.x, bar.y - 5);
+        ctx.restore();
+      });
+    });
+  }
+};
+
+const riderCtx = document.getElementById('chartRidership').getContext('2d');
+const riderChart = new Chart(riderCtx, {
+  type: 'bar',
+  plugins: [topLabelPlugin],
+  data: {
+    labels: ['Pre-COVID', 'COVID / Recovery', 'Post-COVID'],
+    datasets: [{
+      label: 'Avg Monthly Ridership',
+      data: [0, 0, 0],   /* start at 0; animated in on scroll */
+      backgroundColor: [
+        'rgba(59,130,246,0.90)',
+        'rgba(59,130,246,0.40)',
+        'rgba(59,130,246,0.68)'
+      ],
+      borderColor: 'rgba(96,165,250,0)',
+      borderWidth: 0,
+      borderRadius: 5,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1000, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ' ' + ctx.parsed.y.toLocaleString() + ' riders/month'
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: '#64748b', font: { size: 11 } }
+      },
+      y: {
+        display: false,
+        beginAtZero: true,
+        max: 2000000
+      }
+    },
+    layout: { padding: { top: 24 } }
+  }
+});
+
+/* Trigger grow animation exactly once when chart scrolls into view */
+const riderObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      riderChart.data.datasets[0].data = [1666000, 715471, 1274556];
+      riderChart.update();
+      riderObs.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+riderObs.observe(document.getElementById('chartRidership'));
+</script>
+
+</body>
+</html>
