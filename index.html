@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parsa Hassas — Data Analytics Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <style>
     /* ─── Reset & Base ─── */
@@ -112,25 +112,29 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       text-shadow: 0 0 28px rgba(96,165,250,.10);
-      opacity: 0;
-      filter: blur(10px);
-      transform: translateY(18px);
-      animation: nameFadeUp 1.05s cubic-bezier(.2,.8,.2,1) .28s forwards;
     }
-    @keyframes nameFadeUp {
-      0% {
-        opacity: 0;
-        filter: blur(10px);
-        transform: translateY(18px);
-      }
-      100% {
-        opacity: 1;
-        filter: blur(0);
-        transform: translateY(0);
-      }
+    .hero-name-row {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      width: 100vw;
+      max-width: none;
+    }
+    .hero-name-line {
+      flex: 1;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(96,165,250,.95), rgba(96,165,250,.34), transparent);
+      box-shadow: 0 0 18px rgba(96,165,250,.16);
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation: nameLineDraw 2.25s cubic-bezier(.18,.82,.2,1) .35s forwards;
+    }
+    @keyframes nameLineDraw {
+      to { transform: scaleX(1); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .hero-name { animation: none; opacity: 1; filter: blur(0); transform: none; }
+      .hero-name-line { animation: none; transform: scaleX(1); }
     }
     .hero-sub {
       font-size: clamp(.95rem,2.2vw,1.2rem);
@@ -142,6 +146,24 @@
       margin-bottom:2.5rem; font-size:.97rem;
     }
     .hero-btns { display:flex; gap:.9rem; flex-wrap:wrap; }
+
+    .link-icon {
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      vertical-align: -0.14em;
+    }
+    .btn .link-icon { width: 1.05rem; height: 1.05rem; }
+    .proj-lnk .link-icon { width: .95rem; height: .95rem; }
+    .cert-arr .link-icon { width: 1rem; height: 1rem; }
+    .c-val.icon-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .42rem;
+    }
+    .c-val.icon-link .link-icon { width: 1rem; height: 1rem; color: var(--accent-lt); }
 
     .btn {
       padding:.72rem 1.65rem; border-radius:8px;
@@ -342,6 +364,12 @@
       border-radius:8px; display:flex; align-items:center;
       justify-content:center; font-size:1.1rem; flex-shrink:0;
     }
+    .ico-svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      color: var(--accent-lt);
+    }
     .c-lbl { font-size:.73rem; color:var(--t3); margin-bottom:.1rem; }
     .c-val { font-size:.9rem; color:var(--t1); font-weight:500; }
 
@@ -416,7 +444,10 @@
   <div class="container">
     <div class="hero-body">
       <div class="hero-greet">Hello, I'm</div>
-      <h1 class="hero-name">Parsa Hassas</h1>
+      <div class="hero-name-row">
+        <h1 class="hero-name">Parsa Hassas</h1>
+        <div class="hero-name-line" aria-hidden="true"></div>
+      </div>
       <p class="hero-sub">Business Analytics &nbsp;·&nbsp; Data Analytics &amp; ML &nbsp;·&nbsp; Python &nbsp;·&nbsp; SQL &nbsp;·&nbsp; Power BI</p>
       <p class="hero-desc">
         I bridge an Electrical Engineering foundation with applied data analytics —
@@ -427,8 +458,8 @@
       <div class="hero-btns">
         <a href="#projects" class="btn btn-blue">View Projects</a>
         <a href="#contact"  class="btn btn-ghost">Get In Touch</a>
-        <a href="https://github.com/Parsa-Hassas" target="_blank" class="btn btn-ghost">GitHub ↗</a>
-        <a href="https://www.linkedin.com/in/parsa-hassassedighi" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+        <a href="https://github.com/Parsa-Hassas" target="_blank" class="btn btn-ghost"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg> GitHub</a>
+        <a href="https://www.linkedin.com/in/parsa-hassassedighi" target="_blank" class="btn btn-ghost"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10" /></svg> LinkedIn</a>
       </div>
       <div class="hero-stats">
         <div><div class="stat-val" data-target="2">0</div><div class="stat-lbl">Featured Projects</div></div>
@@ -588,8 +619,8 @@
         </div>
         <div class="proj-foot">
           <div class="proj-links">
-            <a href="https://github.com/Parsa-Hassas/-ttc-ridership-dashboard" target="_blank" class="proj-lnk">↗ GitHub Repo</a>
-            <a href="https://ttc-ridership-dashboard.onrender.com" target="_blank" class="proj-lnk">↗ Live Dashboard</a>
+            <a href="https://github.com/Parsa-Hassas/-ttc-ridership-dashboard" target="_blank" class="proj-lnk"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg> GitHub Repo</a>
+            <a href="https://ttc-ridership-dashboard.onrender.com" target="_blank" class="proj-lnk"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg> Live Dashboard</a>
           </div>
           <span class="badge">Transit Analytics</span>
         </div>
@@ -722,7 +753,7 @@
           <div class="cert-name">Data Visualization with Python</div>
           <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://coursera.org/share/3e1d0071c853b6289de7fe12c47058ea" target="_blank" class="card cert-card r">
         <div class="cert-ico">🔬</div>
@@ -730,7 +761,7 @@
           <div class="cert-name">Data Analysis with Python</div>
           <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://coursera.org/share/ad7ef3cda02215dba6ea98e2fa32d928" target="_blank" class="card cert-card r">
         <div class="cert-ico">🗄️</div>
@@ -738,7 +769,7 @@
           <div class="cert-name">Databases and SQL for Data Science with Python</div>
           <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://coursera.org/share/70c7dd26aa1982ce07e9d74b5b4308a6" target="_blank" class="card cert-card r">
         <div class="cert-ico">🐍</div>
@@ -746,7 +777,7 @@
           <div class="cert-name">Python Project for Data Science</div>
           <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://coursera.org/share/53dd120f0d42f6fdb309659656177bd7" target="_blank" class="card cert-card r">
         <div class="cert-ico">🤖</div>
@@ -754,7 +785,7 @@
           <div class="cert-name">Python for Data Science, AI &amp; Development</div>
           <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://coursera.org/share/be870654add8811f84f04f679a5d37cd" target="_blank" class="card cert-card r">
         <div class="cert-ico">📈</div>
@@ -762,7 +793,7 @@
           <div class="cert-name">Data Visualization and Dashboards with Excel and Cognos</div>
           <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://coursera.org/share/c0d5b5f6070eb661ece8ec6041efb402" target="_blank" class="card cert-card r">
         <div class="cert-ico">📊</div>
@@ -770,7 +801,7 @@
           <div class="cert-name">Data Analysis and Visualization Foundations</div>
           <div class="cert-src">IBM &nbsp;·&nbsp; Coursera</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://www.linkedin.com/learning/certificates/7e6d1e790d274ad6059ac09633e6a9fd1ea91510b8113908569df2cd94b9d5c4?trk=share_certificate" target="_blank" class="card cert-card r">
         <div class="cert-ico">⚡</div>
@@ -778,7 +809,7 @@
           <div class="cert-name">Lean Foundations</div>
           <div class="cert-src">LinkedIn Learning</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
       <a href="https://www.linkedin.com/learning/certificates/c34187bdaea0b1b4f0f807f81b2e7efedd5cd581ebc3b52a236811792b1a854b?trk=share_certificate" target="_blank" class="card cert-card r">
         <div class="cert-ico">🔄</div>
@@ -786,7 +817,7 @@
           <div class="cert-name">Agile Development in the New World of Work</div>
           <div class="cert-src">LinkedIn Learning</div>
         </div>
-        <div class="cert-arr">↗</div>
+        <div class="cert-arr"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg></div>
       </a>
     </div>
 
@@ -806,35 +837,35 @@
     <div class="contact-grid r">
       <div>
         <div class="c-item">
-          <div class="c-ico">✉️</div>
+          <div class="c-ico"><svg class="ico-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /><path d="M3 7l9 6l9 -6" /></svg></div>
           <div>
             <div class="c-lbl">Email</div>
             <a href="mailto:hassasparsa@gmail.com" class="c-val">hassasparsa@gmail.com</a>
           </div>
         </div>
         <div class="c-item">
-          <div class="c-ico">📱</div>
+          <div class="c-ico"><svg class="ico-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-device-mobile"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14" /><path d="M11 4h2" /><path d="M12 17v.01" /></svg></div>
           <div>
             <div class="c-lbl">Phone</div>
             <div class="c-val">+1 (647) 760-4706</div>
           </div>
         </div>
         <div class="c-item">
-          <div class="c-ico">💼</div>
+          <div class="c-ico"><svg class="ico-svg" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10" /></svg></div>
           <div>
             <div class="c-lbl">LinkedIn</div>
-            <a href="https://www.linkedin.com/in/parsa-hassassedighi" target="_blank" class="c-val">linkedin.com/in/parsa-hassassedighi</a>
+            <a href="https://www.linkedin.com/in/parsa-hassassedighi" target="_blank" class="c-val icon-link"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10" /></svg> linkedin.com/in/parsa-hassassedighi</a>
           </div>
         </div>
         <div class="c-item">
-          <div class="c-ico">🐙</div>
+          <div class="c-ico"><svg class="ico-svg" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg></div>
           <div>
             <div class="c-lbl">GitHub</div>
-            <a href="https://github.com/Parsa-Hassas" target="_blank" class="c-val">github.com/Parsa-Hassas</a>
+            <a href="https://github.com/Parsa-Hassas" target="_blank" class="c-val icon-link"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg> github.com/Parsa-Hassas</a>
           </div>
         </div>
         <div class="c-item">
-          <div class="c-ico">📍</div>
+          <div class="c-ico"><svg class="ico-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-map-pin"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0" /></svg></div>
           <div>
             <div class="c-lbl">Location</div>
             <div class="c-val">Toronto, Canada</div>
