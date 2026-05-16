@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Watchlist — Movie Recommendation Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#07101f; --bg-alt:#0c1526; --bg-card:#101e33; --bg-hover:#132540;
+      --accent:#3b82f6; --accent-lt:#60a5fa; --bronze:#c79255; --bronze-lt:#e0b879;
+      --bronze-glow:rgba(199,146,85,.16); --glow:rgba(59,130,246,.12);
+      --t1:#f1f5f9; --t2:#94a3b8; --t3:#64748b; --border:rgba(255,255,255,.07); --border-b:rgba(59,130,246,.18);
+    }
+    html { scroll-behavior:smooth; }
+    body { background:var(--bg); color:var(--t1); font-family:'Inter',sans-serif; line-height:1.65; overflow-x:hidden; }
+    h1,h2,h3,h4 { font-family:'Space Grotesk',sans-serif; font-weight:700; }
+    a { color:var(--accent-lt); text-decoration:none; transition:.2s; } a:hover { color:#fff; }
+    .container { max-width:1080px; margin:0 auto; padding:0 2rem; }
+    section { padding:5.5rem 0; } .div { height:1px; background:var(--border); }
+    nav { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(7,16,31,.88); backdrop-filter:blur(14px); border-bottom:1px solid var(--border); padding:.9rem 2rem; }
+    .nav-in { max-width:1080px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.05rem; color:var(--t1); } .logo span { color:var(--accent); }
+    .nav-links { display:flex; gap:1.8rem; list-style:none; } .nav-links a { color:var(--t2); font-size:.85rem; font-weight:500; } .nav-links a:hover { color:var(--t1); }
+    #scroll-prog { position:fixed; top:0; left:0; height:2px; width:0%; background:linear-gradient(90deg,var(--bronze),var(--accent-lt)); z-index:9999; transition:width .08s linear; pointer-events:none; }
+    .case-hero { min-height:86vh; display:flex; align-items:center; padding-top:7rem; position:relative; overflow:hidden; }
+    .case-hero::before { content:''; position:absolute; top:-170px; right:-220px; width:640px; height:640px; background:radial-gradient(circle,rgba(199,146,85,.09) 0%,transparent 68%); pointer-events:none; }
+    .case-hero::after { content:''; position:absolute; bottom:-100px; left:-180px; width:520px; height:520px; background:radial-gradient(circle,rgba(59,130,246,.06) 0%,transparent 68%); pointer-events:none; }
+    .case-body { position:relative; z-index:1; }
+    .case-kicker, .eyebrow { color:var(--bronze-lt); font-size:.74rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; margin-bottom:.75rem; }
+    .case-title { font-size:clamp(2.5rem,6vw,5rem); line-height:1.02; letter-spacing:-.055em; max-width:900px; margin-bottom:1.1rem; background:linear-gradient(120deg,#f8fafc 0%,#dbeafe 46%,#e0b879 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .case-desc { color:var(--t2); max-width:710px; font-size:1.02rem; line-height:1.85; margin-bottom:2rem; }
+    .hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:2rem; align-items:center; }
+    .hero-visual { background:linear-gradient(180deg,rgba(16,30,51,.82),rgba(12,21,38,.9)); border:1px solid var(--border); border-radius:18px; padding:1rem; box-shadow:0 24px 70px rgba(0,0,0,.32); }
+    .hero-visual img { width:100%; display:block; border-radius:12px; opacity:.84; filter:grayscale(20%) contrast(1.05); }
+    .page-actions { display:flex; gap:.9rem; flex-wrap:wrap; margin-top:1.5rem; }
+    .btn { padding:.72rem 1.65rem; border-radius:9px; font-weight:700; font-size:.87rem; transition:all .22s; display:inline-flex; align-items:center; gap:.4rem; cursor:pointer; }
+    .btn-blue { background:linear-gradient(135deg,var(--bronze-lt),var(--bronze)); color:#101827; border:1px solid rgba(224,184,121,.55); box-shadow:0 8px 26px var(--bronze-glow); }
+    .btn-blue:hover { filter:brightness(1.05); color:#07101f; transform:translateY(-2px); box-shadow:0 12px 36px var(--bronze-glow); }
+    .btn-ghost { background:transparent; color:var(--t1); border:1px solid var(--border); } .btn-ghost:hover { border-color:var(--accent); color:var(--accent-lt); transform:translateY(-2px); }
+    .sec-title { font-size:1.95rem; margin-bottom:.55rem; } .sec-sub { color:var(--t2); max-width:660px; margin-bottom:2.4rem; font-size:.96rem; }
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:1.65rem; transition:.28s; } .card:hover { border-color:var(--border-b); background:var(--bg-hover); transform:translateY(-3px); box-shadow:0 14px 44px rgba(0,0,0,.32); }
+    .metric-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:2.5rem; }
+    .metric { background:rgba(16,30,51,.72); border:1px solid var(--border); border-radius:14px; padding:1.3rem; }
+    .metric-val { font-family:'Space Grotesk',sans-serif; color:var(--bronze-lt); font-size:1.85rem; font-weight:700; line-height:1; } .metric-label { color:var(--t3); font-size:.76rem; margin-top:.45rem; }
+    .story-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.35rem; }
+    .wide { grid-column:1/-1; }
+    .label { color:var(--bronze-lt); font-size:.7rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; margin-bottom:.65rem; }
+    .card p, .story-text { color:var(--t2); font-size:.92rem; line-height:1.8; }
+    .tags { display:flex; flex-wrap:wrap; gap:.45rem; margin-top:1rem; } .tag { background:rgba(59,130,246,.09); border:1px solid rgba(59,130,246,.22); color:var(--accent-lt); padding:.32rem .72rem; border-radius:6px; font-size:.78rem; font-weight:600; }
+    .tag.gold { background:rgba(199,146,85,.09); border-color:rgba(199,146,85,.28); color:var(--bronze-lt); }
+    .callout { color:#d8e6f8; line-height:1.82; padding:1.15rem 1.25rem; border-left:3px solid var(--bronze); background:linear-gradient(90deg,rgba(199,146,85,.08),rgba(59,130,246,.04)); border-radius:0 12px 12px 0; }
+    .pipeline { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:.8rem; align-items:center; margin-top:1.2rem; }
+    .pipe-box { background:rgba(7,16,31,.6); border:1px solid var(--border); border-radius:12px; padding:1rem; min-height:96px; } .pipe-title { color:var(--t1); font-weight:700; font-size:.92rem; } .pipe-text { color:var(--t3); font-size:.78rem; margin-top:.28rem; }
+    .arrow { color:var(--bronze-lt); font-size:1.5rem; }
+    .visual-card { background:var(--bg-card); border:1px solid var(--border); border-radius:18px; padding:1.1rem; overflow:hidden; }
+    .visual-card img { width:100%; display:block; border-radius:12px; background:#fff; }
+    .visual-caption { color:var(--t3); font-size:.78rem; line-height:1.65; margin-top:.85rem; }
+    .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+    .chart-wrap { background:rgba(59,130,246,.04); border:1px solid var(--border); border-radius:14px; padding:1.2rem; min-height:280px; }
+    .chart-title { font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--bronze-lt); margin-bottom:.9rem; }
+    .mini-table { width:100%; border-collapse:collapse; margin-top:1rem; font-size:.86rem; color:var(--t2); }
+    .mini-table th, .mini-table td { padding:.75rem .65rem; border-bottom:1px solid var(--border); text-align:left; } .mini-table th { color:var(--t1); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; }
+    .score-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:1.2rem; }
+    .score-card { border:1px solid rgba(199,146,85,.18); background:rgba(199,146,85,.05); border-radius:14px; padding:1rem; } .score-card h4 { color:var(--bronze-lt); margin-bottom:.35rem; } .score-card p { color:var(--t2); font-size:.86rem; }
+    footer { background:var(--bg); border-top:1px solid var(--border); padding:1.8rem 2rem; text-align:center; color:var(--t3); font-size:.82rem; }
+    .r { opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; } .r.on { opacity:1; transform:translateY(0); }
+    @media(max-width:860px){ .nav-links{display:none;} .hero-grid,.story-grid,.chart-grid,.score-grid{grid-template-columns:1fr;} .metric-grid{grid-template-columns:1fr 1fr;} .pipeline{grid-template-columns:1fr;} .arrow{display:none;} }
+  </style>
+</head>
+<body>
+<div id="scroll-prog"></div>
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="index.html">Parsa<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#education">Education</a></li>
+      <li><a href="index.html#certifications">Certifications</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="case-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="case-body">
+        <div class="case-kicker">Project 02 · Machine Learning Recommender</div>
+        <h1 class="case-title">The Watchlist</h1>
+        <p class="case-desc">A personalized movie recommendation system built around a simple frustration: the movies worth discovering are often scattered across platforms, languages, decades, and niches. The Watchlist turns one user's rated films into a richer discovery engine using multi-source metadata, semantic embeddings, clustering, and quality-aware ranking.</p>
+        <div class="page-actions">
+          <a href="watchlist-technical-report.pdf" target="_blank" class="btn btn-blue">Read Technical Report</a>
+          <a href="index.html#projects" class="btn btn-ghost">Back to Projects</a>
+        </div>
+      </div>
+      <div class="hero-visual r">
+        <img src="watchlist-cover.png" alt="The Watchlist report cover" />
+      </div>
+    </div>
+    <div class="metric-grid r">
+      <div class="metric"><div class="metric-val">50K</div><div class="metric-label">candidate movie pool</div></div>
+      <div class="metric"><div class="metric-val">4</div><div class="metric-label">aspect text channels</div></div>
+      <div class="metric"><div class="metric-val">2-pass</div><div class="metric-label">metadata enrichment design</div></div>
+      <div class="metric"><div class="metric-val">ML</div><div class="metric-label">embedding + clustering pipeline</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section>
+  <div class="container">
+    <div class="eyebrow r">Problem Statement</div>
+    <h2 class="sec-title r">Recommendation should feel like discovery, not repetition</h2>
+    <p class="sec-sub r">Most streaming recommenders are useful, but they are usually locked inside one platform and optimized for broad engagement. That creates a gap for people whose taste crosses languages, decades, genres, and levels of popularity.</p>
+    <div class="story-grid">
+      <div class="card r">
+        <div class="label">The pain point</div>
+        <p>Standard platforms often over-recommend what is already popular or easy to categorize. They can miss older films, international cinema, independent titles, and emotionally similar movies that do not share obvious genre labels.</p>
+      </div>
+      <div class="card r">
+        <div class="label">The design response</div>
+        <p>The Watchlist treats a personal watchlist as a data asset. Instead of asking “what is trending?”, it asks “what does this person's taste actually look like across theme, mood, style, context, and quality?”</p>
+      </div>
+      <div class="wide callout r">
+        The goal was not to build a generic movie list. The goal was to build a recommender that can explain a user's taste, search beyond one platform, and surface films that fit the person — including niche titles that a popularity-first system may never show.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section>
+  <div class="container">
+    <div class="eyebrow r">Data Engineering</div>
+    <h2 class="sec-title r">From messy movie records to a reusable recommendation dataset</h2>
+    <p class="sec-sub r">The technical heart of the project is a multi-source enrichment pipeline. It combines a personal watchlist with TMDb metadata, Wikipedia plot summaries, IMDb rating signals, and a large 50,000-title candidate pool.</p>
+    <div class="pipeline r">
+      <div class="pipe-box"><div class="pipe-title">Watchlist + Pool</div><div class="pipe-text">Rated movies and a large cross-platform candidate universe.</div></div>
+      <div class="arrow">→</div>
+      <div class="pipe-box"><div class="pipe-title">TMDb / Wikipedia / IMDb</div><div class="pipe-text">Metadata, plots, multilingual fallback, ratings, and vote counts.</div></div>
+      <div class="arrow">→</div>
+      <div class="pipe-box"><div class="pipe-title">Cleaned Feature Store</div><div class="pipe-text">Rich text fields, embeddings, quality signals, and audit flags.</div></div>
+    </div>
+    <div class="story-grid" style="margin-top:1.4rem;">
+      <div class="card r">
+        <div class="label">Pass 1 · Fast coverage</div>
+        <p>Every candidate is first enriched with TMDb fields such as title, original language, genres, overview, cast/director signals, keywords, and popularity metadata. This creates a reliable baseline for all rows.</p>
+      </div>
+      <div class="card r">
+        <div class="label">Pass 2 · Selective depth</div>
+        <p>Only weak or low-confidence rows are sent through the heavier Wikipedia enrichment layer. This keeps the system scalable while improving plot coverage for older, foreign, or sparse records.</p>
+      </div>
+    </div>
+    <div class="visual-card r" style="margin-top:1.5rem;">
+      <img src="watchlist-source-coverage.png" alt="Source coverage dashboard for The Watchlist project" />
+      <div class="visual-caption">Source coverage view from the report: the pool spans decades and languages, while enrichment checks track IMDb, TMDb, English Wikipedia plot coverage, and translated plot coverage.</div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section>
+  <div class="container">
+    <div class="eyebrow r">Feature Engineering</div>
+    <h2 class="sec-title r">Movies are not represented as one flat description</h2>
+    <p class="sec-sub r">A movie can match someone for different reasons: subject matter, emotional tone, cinematic style, cultural context, or some combination. The project therefore builds multiple text channels before embedding.</p>
+    <div class="score-grid r">
+      <div class="score-card"><h4>Theme</h4><p>What the movie is about: relationships, memory, crime, coming of age, identity, power, loss, or other conceptual signals.</p></div>
+      <div class="score-card"><h4>Mood</h4><p>How the film feels: nostalgic, bleak, tense, warm, surreal, meditative, chaotic, or emotionally restrained.</p></div>
+      <div class="score-card"><h4>Style + Context</h4><p>How and where it belongs: genre, decade, language, director/cast clues, country context, and storytelling texture.</p></div>
+    </div>
+    <div class="card r" style="margin-top:1.5rem;">
+      <div class="label">Example transformation</div>
+      <p>A film like <strong style="color:var(--t1);">Cinema Paradiso</strong> is not only “Drama, Romance.” The system builds richer text around childhood memory, film culture, nostalgia, Italy, projectionist friendship, and coming-of-age context — then embeds those representations separately so the recommender can match deeper similarity than genre alone.</p>
+      <div class="tags"><span class="tag gold">theme text</span><span class="tag gold">mood text</span><span class="tag gold">style text</span><span class="tag gold">context text</span><span class="tag">semantic embeddings</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section>
+  <div class="container">
+    <div class="eyebrow r">Machine Learning</div>
+    <h2 class="sec-title r">Taste is modeled as multiple preference lanes</h2>
+    <p class="sec-sub r">The recommendation logic does not collapse the user into one average vector. It builds rating-centered preference signals and then segments the watchlist into soft overlapping taste streams.</p>
+    <div class="chart-grid">
+      <div class="chart-wrap r">
+        <div class="chart-title">Taste stream strength</div>
+        <canvas id="streamChart"></canvas>
+      </div>
+      <div class="card r">
+        <div class="label">What the streams mean</div>
+        <p>One stream captured a stronger positive alignment, with representative titles such as <em>Cries and Whispers</em>, <em>Autumn Sonata</em>, <em>Mother!</em>, <em>Howl's Moving Castle</em>, and <em>Nostalgia</em>. Another stream grouped a different lane of taste around titles such as <em>Scarface</em>, <em>The Departed</em>, <em>Public Enemies</em>, <em>John Wick</em>, and <em>Pulp Fiction</em>.</p>
+        <table class="mini-table">
+          <tr><th>Signal</th><th>Purpose</th></tr>
+          <tr><td>overall taste</td><td>general fit</td></tr>
+          <tr><td>positive taste</td><td>what to seek</td></tr>
+          <tr><td>negative taste</td><td>what to penalize</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section>
+  <div class="container">
+    <div class="eyebrow r">Recommendation Scoring</div>
+    <h2 class="sec-title r">The final ranking balances personal fit with film quality</h2>
+    <p class="sec-sub r">A pure similarity system can recommend weak films that happen to match surface-level taste. A pure popularity system can erase the user's personality. This project combines both sides.</p>
+    <div class="score-grid r">
+      <div class="score-card"><h4>Taste similarity</h4><p>Measures how strongly a candidate aligns with the learned user preference vectors and aspect-specific embeddings.</p></div>
+      <div class="score-card"><h4>Stream alignment</h4><p>Checks whether a candidate belongs near one of the user's meaningful taste lanes instead of only matching the average profile.</p></div>
+      <div class="score-card"><h4>Quality layer</h4><p>Uses IMDb weighted rating, metadata richness, and text reliability to avoid low-quality or poorly supported recommendations.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section>
+  <div class="container">
+    <div class="eyebrow r">Outcome</div>
+    <h2 class="sec-title r">What this project proves</h2>
+    <div class="story-grid">
+      <div class="card r">
+        <div class="label">Technical outcome</div>
+        <p>The project produced an end-to-end recommendation workflow: data fetching, enrichment, cleaning, aspect text construction, semantic embedding, taste segmentation, scoring, and validation.</p>
+      </div>
+      <div class="card r">
+        <div class="label">Analytics outcome</div>
+        <p>It reframes recommendation as a data product, not just a model. The system includes checks for coverage, ID integrity, enrichment quality, suspicious matches, and ranking behavior.</p>
+      </div>
+      <div class="wide callout r">
+        The strongest result is the architecture: a recommender that can grow. The current version establishes a strong baseline, while the next version can add multi-query retrieval, diversity-aware reranking, stronger reliability filters, ANN indexing, and richer recommendation explanations.
+      </div>
+    </div>
+    <div class="page-actions r" style="margin-top:2rem;">
+      <a href="watchlist-technical-report.pdf" target="_blank" class="btn btn-blue">Read Technical Report</a>
+      <a href="index.html#contact" class="btn btn-ghost">Discuss This Project</a>
+    </div>
+  </div>
+</section>
+
+<footer><div>© 2025 Parsa Hassas &nbsp;·&nbsp; Built for the next opportunity.</div></footer>
+<script>
+const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }); }, { threshold:0.08, rootMargin:'0px 0px -36px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+const prog = document.getElementById('scroll-prog');
+window.addEventListener('scroll', () => { const scrolled = document.documentElement.scrollTop; const total = document.documentElement.scrollHeight - document.documentElement.clientHeight; prog.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%'; }, { passive:true });
+Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = "'Inter', sans-serif"; Chart.defaults.font.size = 11;
+new Chart(document.getElementById('streamChart'), {
+  type:'bar',
+  data:{ labels:['Stream 0','Stream 1'], datasets:[{ label:'Stream strength', data:[2.256,-0.418], backgroundColor:['rgba(199,146,85,.82)','rgba(96,165,250,.55)'], borderRadius:6 }] },
+  options:{ responsive:true, plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:ctx=>' strength: '+ctx.parsed.y.toFixed(3) } } }, scales:{ x:{ grid:{display:false}, border:{display:false} }, y:{ grid:{color:'rgba(255,255,255,.06)'}, border:{display:false} } } }
+});
+</script>
+</body>
+</html>

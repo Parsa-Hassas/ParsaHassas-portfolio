@@ -18,6 +18,9 @@
       --bg-hover:  #132540;
       --accent:    #3b82f6;
       --accent-lt: #60a5fa;
+      --bronze:    #c79255;
+      --bronze-lt: #e0b879;
+      --bronze-glow: rgba(199,146,85,0.16);
       --glow:      rgba(59,130,246,0.12);
       --t1:        #f1f5f9;
       --t2:        #94a3b8;
@@ -240,7 +243,7 @@
     .proj-card::before {
       content:''; position:absolute;
       top:0; left:0; right:0; height:2px;
-      background:linear-gradient(90deg,var(--accent),transparent);
+      background:linear-gradient(90deg,var(--accent),var(--bronze),transparent);
       opacity:0; transition:opacity .3s;
     }
     .proj-card:hover {
@@ -272,8 +275,8 @@
       margin-top: 1.2rem;
       margin-bottom: 1.5rem;
       padding: .9rem 1.1rem;
-      border-left: 2px solid var(--accent);
-      background: rgba(59,130,246,.06);
+      border-left: 2px solid var(--bronze);
+      background: linear-gradient(90deg, rgba(199,146,85,.075), rgba(59,130,246,.035));
       border-radius: 0 8px 8px 0;
     }
     .proj-finding strong { color: #e2eeff; font-weight: 600; }
@@ -290,14 +293,29 @@
       align-items:center; flex-wrap:wrap; gap:.9rem;
       padding-top:1.4rem; border-top:1px solid var(--border);
     }
-    .proj-links { display:flex; gap:1.2rem; }
+    .proj-links { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
     .proj-lnk {
       font-size:.84rem; font-weight:500;
       color:var(--accent-lt);
       display:flex; align-items:center; gap:.3rem;
-      transition:color .2s;
+      transition:all .22s ease;
     }
     .proj-lnk:hover { color:#fff; }
+    .proj-lnk.case-study {
+      color:#101827;
+      background:linear-gradient(135deg,var(--bronze-lt),var(--bronze));
+      border:1px solid rgba(224,184,121,.5);
+      border-radius:999px;
+      padding:.48rem .9rem;
+      box-shadow:0 8px 26px var(--bronze-glow);
+    }
+    .proj-lnk.case-study:hover {
+      color:#07101f;
+      transform:translateY(-2px);
+      box-shadow:0 12px 34px rgba(199,146,85,.25);
+      filter:brightness(1.05);
+    }
+    .proj-lnk.case-study .link-icon { color:#101827; }
     .proj-lnk.dim { color:var(--t3); cursor:default; }
     .proj-lnk.dim:hover { color:var(--t3); }
 
@@ -411,6 +429,13 @@
     /* ─── Responsive ─── */
     @media(max-width:760px) {
       .nav-links { display:none; }
+      .container { padding: 0 1.55rem; }
+      .hero { padding-top: 5.4rem; }
+      .hero-greet { margin-left: .08rem; }
+      .hero-greet::before { width: 1.6rem; }
+      .hero-name-row { width: 100%; gap: .65rem; }
+      .hero-name-line { min-width: 3.6rem; opacity: .9; }
+      .hero-sub, .hero-desc { max-width: 100%; padding-right: .25rem; }
       .hero-stats { flex-wrap:wrap; gap:1.6rem; }
       .proj-foot { flex-direction:column; align-items:flex-start; }
     }
@@ -574,7 +599,7 @@
   <div class="container">
     <div class="eyebrow r">Featured Work</div>
     <h2 class="sec-title r">Projects</h2>
-    <p class="sec-sub r">End-to-end analytics projects — from raw data pipelines to deployed tools and actionable insights.</p>
+    <p class="sec-sub r">Short project snapshots for quick review. Full methodology, data pipeline, modeling, and dashboard details are moved into dedicated case-study pages.</p>
 
     <div class="proj-grid">
 
@@ -582,43 +607,36 @@
       <div class="proj-card r">
         <div class="proj-num">PROJECT 01</div>
         <h3 class="proj-title">TTC Ridership Recovery &amp; Changing Travel Patterns</h3>
-        <p class="proj-sub">Regime-Based Transit Analysis &nbsp;·&nbsp; Python &nbsp;·&nbsp; SAS &nbsp;·&nbsp; Tableau &nbsp;·&nbsp; Dash</p>
+        <p class="proj-sub">Transit Analytics &nbsp;·&nbsp; Python &nbsp;·&nbsp; SAS &nbsp;·&nbsp; Tableau &nbsp;·&nbsp; Dash</p>
         <p class="proj-lead">
-          A structured analytical study of Toronto TTC monthly ridership across three COVID-era regimes.
-          The project goes beyond descriptive charts to reveal how the <em>structure</em> of demand fundamentally
-          shifted — which variables drove ridership, and by how much, changed entirely depending on the period.
+          A regime-based analysis of Toronto TTC ridership showing how travel demand changed before, during,
+          and after COVID. The project combines open data, feature engineering, statistical modeling, and
+          dashboard storytelling to explain not only how much ridership recovered, but what now drives it.
         </p>
-        <div class="proj-bullets">
-          <div class="proj-bullet">Built a 179-observation monthly dataset by merging TTC ridership, gas prices, unemployment rates, and weather data from four open government sources.</div>
-          <div class="proj-bullet">Applied OLS regression, stepwise selection, Ridge, and Lasso independently across three regime subsets (Pre-COVID, COVID/Recovery, Post-COVID) to compare variable importance.</div>
-          <div class="proj-bullet">Post-COVID ridership recovered to 76.5% of pre-COVID levels — a structural shift, not just a volume gap.</div>
-          <div class="proj-bullet">Designed two Tableau dashboards (executive and technical) and deployed an interactive Dash app on Render for live exploration.</div>
+
+        <div class="proj-finding">
+          <strong>Key finding:</strong> Post-COVID ridership recovered to 76.5% of pre-COVID levels, but the demand structure changed.
+          Pre-COVID patterns were dominated by annual seasonal memory, while recovery and post-COVID periods showed different sensitivities
+          to gas prices, unemployment, weather, and short-term momentum.
         </div>
 
-        <!-- Chart 1: Ridership Recovery -->
         <div class="chart-wrap">
           <div class="chart-title">Average Monthly Ridership by Regime</div>
           <canvas id="chartRidership" height="100"></canvas>
         </div>
 
-        <div class="proj-finding">
-          <strong>Key finding:</strong> Pre-COVID ridership was governed by annual seasonal memory (ridership_lag12).
-          During COVID/Recovery it became reactive to gas prices and short-run momentum.
-          Post-COVID shows partial normalization — seasonal structure returned, but with new unemployment
-          and weather sensitivity. The pandemic didn't just reduce ridership; it changed what drives it.
-        </div>
         <div class="tags" style="margin-bottom:1.5rem;">
           <span class="tag">Python</span>
-          <span class="tag">SAS (PROC REG)</span>
+          <span class="tag">SAS</span>
           <span class="tag">Tableau</span>
-          <span class="tag">Dash / Plotly</span>
+          <span class="tag">Dash</span>
           <span class="tag">Ridge &amp; Lasso</span>
-          <span class="tag">Feature Engineering</span>
-          <span class="tag">Regime Analysis</span>
           <span class="tag">Time Series</span>
         </div>
+
         <div class="proj-foot">
           <div class="proj-links">
+            <a href="ttc-project.html" class="proj-lnk case-study"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg> Read Case Study</a>
             <a href="https://github.com/Parsa-Hassas/-ttc-ridership-dashboard" target="_blank" class="proj-lnk"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg> GitHub Repo</a>
             <a href="https://ttc-ridership-dashboard.onrender.com" target="_blank" class="proj-lnk"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg> Live Dashboard</a>
           </div>
@@ -630,38 +648,30 @@
       <div class="proj-card r">
         <div class="proj-num">PROJECT 02</div>
         <h3 class="proj-title">The Watchlist — Movie Recommendation System</h3>
-        <p class="proj-sub">Personalized ML Recommender &nbsp;·&nbsp; Python &nbsp;·&nbsp; NLP &nbsp;·&nbsp; Clustering &nbsp;·&nbsp; API Engineering</p>
+        <p class="proj-sub">ML Recommender &nbsp;·&nbsp; Python &nbsp;·&nbsp; NLP &nbsp;·&nbsp; Embeddings &nbsp;·&nbsp; Clustering</p>
         <p class="proj-lead">
-          An end-to-end personalized movie recommendation system built from scratch to address the
-          limitations of platform-specific recommenders: limited cross-platform discovery, filter-bubble
-          behavior, and poor explainability. The system models user taste across multiple cinematic
-          dimensions and ranks candidates from a 50,000-title pool.
+          A personalized movie recommendation system built from a user watchlist and a 50,000-title candidate pool.
+          The project uses enriched movie metadata, semantic text embeddings, rating-aware user profiles, and taste-stream
+          clustering to recommend films beyond platform-specific popularity bubbles.
         </p>
-        <div class="proj-bullets">
-          <div class="proj-bullet">Engineered an automated multi-source data pipeline integrating TMDb API, Wikipedia plot summaries (with multilingual fallback &amp; translation), and IMDb ratings across a 50,000-title candidate pool.</div>
-          <div class="proj-bullet">Built a scalable two-pass enrichment architecture: fast TMDb enrichment for all 50K rows, then selective Wikipedia enrichment only for low-confidence records — minimizing API cost while maximizing coverage.</div>
-          <div class="proj-bullet">Created four aspect-specific text representations per movie (theme, mood, style, context) and computed dense semantic embeddings for each channel separately.</div>
-          <div class="proj-bullet">Modeled user taste via centered rating vectors and soft overlapping "taste streams" using PCA + K-Means clustering — capturing that users have multiple preference lanes, not one flat profile.</div>
-          <div class="proj-bullet">Final scoring framework combines aspect-level similarity, stream alignment, negative-preference penalties, and IMDb-based cinematic quality weighting for selective, explainable recommendations.</div>
-        </div>
+
         <div class="proj-finding">
-          <strong>Key outcome:</strong> The system successfully moves beyond single-platform, trend-driven suggestions
-          by modeling taste as overlapping preference streams rather than a flat profile. Recommendations scored
-          against both personal fit and cinematic quality — surfacing niche films a standard recommender would
-          never surface, with explainability built into every ranking decision.
+          <strong>Key finding:</strong> A user’s taste is better represented as multiple overlapping preference streams rather than one flat profile.
+          The system separates thematic, stylistic, mood, and context signals so recommendations can be both more selective and more explainable.
         </div>
+
         <div class="tags" style="margin-bottom:1.5rem;">
           <span class="tag">Python</span>
           <span class="tag">NLP / Embeddings</span>
-          <span class="tag">K-Means Clustering</span>
+          <span class="tag">K-Means</span>
           <span class="tag">PCA</span>
-          <span class="tag">API Integration</span>
-          <span class="tag">Data Pipeline</span>
+          <span class="tag">API Pipeline</span>
           <span class="tag">Recommender Systems</span>
-          <span class="tag">TMDb / IMDb / Wikipedia</span>
         </div>
+
         <div class="proj-foot">
           <div class="proj-links">
+            <a href="watchlist-project.html" class="proj-lnk case-study"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg> Read Case Study</a>
             <span class="proj-lnk dim">GitHub — Coming Soon</span>
           </div>
           <span class="badge">Machine Learning</span>
@@ -841,13 +851,6 @@
           <div>
             <div class="c-lbl">Email</div>
             <a href="mailto:hassasparsa@gmail.com" class="c-val">hassasparsa@gmail.com</a>
-          </div>
-        </div>
-        <div class="c-item">
-          <div class="c-ico"><svg class="ico-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-device-mobile"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14" /><path d="M11 4h2" /><path d="M12 17v.01" /></svg></div>
-          <div>
-            <div class="c-lbl">Phone</div>
-            <div class="c-val">+1 (647) 760-4706</div>
           </div>
         </div>
         <div class="c-item">
