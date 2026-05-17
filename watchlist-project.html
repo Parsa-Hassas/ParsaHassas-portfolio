@@ -69,7 +69,10 @@
     footer { background:var(--bg); border-top:1px solid var(--border); padding:1.8rem 2rem; text-align:center; color:var(--t3); font-size:.82rem; }
     .r { opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; } .r.on { opacity:1; transform:translateY(0); }
     @media(max-width:860px){ .nav-links{display:none;} .hero-grid,.story-grid,.chart-grid,.score-grid{grid-template-columns:1fr;} .metric-grid{grid-template-columns:1fr 1fr;} .pipeline{grid-template-columns:1fr;} .arrow{display:none;} }
-  </style>
+  
+    .end-nav-section { padding: 3rem 0 4rem; text-align: center; }
+    .back-main-btn { box-shadow: 0 10px 28px rgba(199,146,85,.18); }
+</style>
 </head>
 <body>
 <div id="scroll-prog"></div>
@@ -250,6 +253,12 @@
       <a href="watchlist-technical-report.pdf" target="_blank" class="btn btn-blue">Read Technical Report</a>
       <a href="index.html#contact" class="btn btn-ghost">Discuss This Project</a>
     </div>
+  </div>
+</section>
+
+<section class="end-nav-section">
+  <div class="container">
+    <a href="index.html" class="btn btn-blue back-main-btn">&larr; Back to main page</a>
   </div>
 </section>
 

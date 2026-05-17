@@ -422,6 +422,17 @@
       margin-bottom: .9rem;
     }
 
+
+    .chart-wrap canvas {
+      display: block;
+      width: 100% !important;
+      height: 220px !important;
+      min-height: 0;
+      max-height: 220px;
+    }
+    @media(max-width:760px) {
+      .chart-wrap canvas { height: 185px !important; max-height: 185px; }
+    }
     /* ─── Reveal animation ─── */
     .r { opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease; }
     .r.on { opacity:1; transform:translateY(0); }
@@ -599,7 +610,7 @@
   <div class="container">
     <div class="eyebrow r">Featured Work</div>
     <h2 class="sec-title r">Projects</h2>
-    <p class="sec-sub r">Short project snapshots for quick review. Full methodology, data pipeline, modeling, and dashboard details are moved into dedicated case-study pages.</p>
+    <p class="sec-sub r">A quick look at the two projects I’m most proud of. Each one started with a real question, went through the messy data work, and ended with something usable — models, dashboards, and insights that are easy to explain.</p>
 
     <div class="proj-grid">
 
@@ -621,8 +632,8 @@
         </div>
 
         <div class="chart-wrap">
-          <div class="chart-title">Average Monthly Ridership by Regime</div>
-          <canvas id="chartRidership" height="100"></canvas>
+          <div class="chart-title">Average Annual TTC Ridership</div>
+          <canvas id="chartRidership" height="125"></canvas>
         </div>
 
         <div class="tags" style="margin-bottom:1.5rem;">
@@ -928,88 +939,161 @@ function animateCounters() {
 /* Trigger counters after a short delay on page load */
 window.addEventListener('load', () => setTimeout(animateCounters, 350));
 
-/* ── Ridership Recovery Chart ── */
+/* ── Minimal TTC Annual Ridership Timeline Chart ── */
 Chart.defaults.color = '#94a3b8';
 Chart.defaults.font.family = "'Inter', sans-serif";
 Chart.defaults.font.size = 11;
 
-/* Custom plugin: value labels on top of each bar */
-const topLabelPlugin = {
-  id: 'topLabel',
-  afterDatasetsDraw(chart) {
-    const ctx = chart.ctx;
-    chart.data.datasets.forEach((ds, i) => {
-      chart.getDatasetMeta(i).data.forEach((bar, idx) => {
-        const val = ds.data[idx];
-        if (!val) return;
-        const label = val >= 1e6
-          ? (val / 1e6).toFixed(2) + 'M'
-          : Math.round(val / 1000) + 'K';
-        ctx.save();
-        ctx.fillStyle = '#cde4ff';
-        ctx.font = '600 11px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText(label, bar.x, bar.y - 5);
-        ctx.restore();
-      });
-    });
+const riderLabels = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+const riderValues = [1582417, 1629833, 1659000, 1686833, 1688917, 1689917, 1688833, 1660583, 1691833, 714917, 610333, 984917, 1237500, 1291417, 1294750];
+const riderPeriods = ["Pre-COVID", "Pre-COVID", "Pre-COVID", "Pre-COVID", "Pre-COVID", "Pre-COVID", "Pre-COVID", "Pre-COVID", "Pre-COVID", "COVID/Recovery", "COVID/Recovery", "COVID/Recovery", "Post-COVID", "Post-COVID", "Post-COVID"];
+const RIDER_LINE_PRE   = 'rgba(96,135,196,0.96)';
+const RIDER_LINE_COVID = 'rgba(180,140,92,0.98)';
+const RIDER_LINE_POST  = 'rgba(54,76,113,0.98)';
+
+function periodColor(period) {
+  if (period === 'Pre-COVID') return RIDER_LINE_PRE;
+  if (period === 'COVID/Recovery') return RIDER_LINE_COVID;
+  return RIDER_LINE_POST;
+}
+let riderChart;
+
+function fmtRiders(value) {
+  if (value >= 1000000) return (value / 1000000).toFixed(2) + 'M';
+  return Math.round(value / 1000) + 'K';
+}
+
+/* Smooth left-to-right reveal: clips the line instead of animating point-by-point. */
+const lineRevealPlugin = {
+  id: 'lineReveal',
+  beforeInit(chart) {
+    chart.$revealProgress = 0;
+  },
+  beforeDatasetDraw(chart) {
+    const { ctx, chartArea } = chart;
+    const progress = chart.$revealProgress ?? 1;
+    const width = (chartArea.right - chartArea.left) * progress;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(
+      chartArea.left,
+      chartArea.top - 8,
+      width,
+      chartArea.bottom - chartArea.top + 16
+    );
+    ctx.clip();
+  },
+  afterDatasetDraw(chart) {
+    chart.ctx.restore();
   }
 };
 
-const riderCtx = document.getElementById('chartRidership').getContext('2d');
-const riderChart = new Chart(riderCtx, {
-  type: 'bar',
-  plugins: [topLabelPlugin],
-  data: {
-    labels: ['Pre-COVID', 'COVID / Recovery', 'Post-COVID'],
-    datasets: [{
-      label: 'Avg Monthly Ridership',
-      data: [0, 0, 0],   /* start at 0; animated in on scroll */
-      backgroundColor: [
-        'rgba(59,130,246,0.90)',
-        'rgba(59,130,246,0.40)',
-        'rgba(59,130,246,0.68)'
-      ],
-      borderColor: 'rgba(96,165,250,0)',
-      borderWidth: 0,
-      borderRadius: 5,
-      borderSkipped: false
-    }]
-  },
-  options: {
-    responsive: true,
-    animation: { duration: 1000, easing: 'easeOutQuart' },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: ctx => ' ' + ctx.parsed.y.toLocaleString() + ' riders/month'
-        }
-      }
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        border: { display: false },
-        ticks: { color: '#64748b', font: { size: 11 } }
-      },
-      y: {
-        display: false,
-        beginAtZero: true,
-        max: 2000000
-      }
-    },
-    layout: { padding: { top: 24 } }
-  }
-});
+function animateLineReveal(chart, duration = 1150) {
+  const start = performance.now();
+  const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
 
-/* Trigger grow animation exactly once when chart scrolls into view */
+  function frame(now) {
+    const t = Math.min((now - start) / duration, 1);
+    chart.$revealProgress = easeOutCubic(t);
+    chart.draw();
+    if (t < 1) requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(frame);
+}
+
+function createRidershipTimeline() {
+  const canvas = document.getElementById('chartRidership');
+  const riderCtx = canvas.getContext('2d');
+
+  riderChart = new Chart(riderCtx, {
+    type: 'line',
+    plugins: [lineRevealPlugin],
+    data: {
+      labels: riderLabels,
+      datasets: [{
+        label: 'Average Annual Weekday Ridership',
+        data: riderValues,
+        borderColor: RIDER_LINE_PRE,
+        backgroundColor: 'transparent',
+        segment: {
+          borderColor: ctx => {
+            const from = riderPeriods[ctx.p0DataIndex];
+            const to = riderPeriods[ctx.p1DataIndex];
+            return from === to ? periodColor(from) : periodColor(to);
+          }
+        },
+        borderWidth: 2.6,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        pointHoverBorderWidth: 0,
+        tension: 0.34,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      resizeDelay: 120,
+      animation: false,
+      animations: { colors: false, x: false, y: false },
+      transitions: {
+        active: { animation: { duration: 0 } },
+        resize: { animation: { duration: 0 } }
+      },
+      interaction: { intersect: false, mode: 'nearest' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(7,16,31,.94)',
+          borderColor: 'rgba(224,184,121,.35)',
+          borderWidth: 1,
+          displayColors: false,
+          callbacks: {
+            title: items => items[0].label,
+            label: ctx => ' ' + fmtRiders(ctx.parsed.y) + ' average riders',
+            afterLabel: ctx => ' ' + riderPeriods[ctx.dataIndex]
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false, drawBorder: false },
+          border: { display: false },
+          ticks: {
+            color: '#64748b',
+            autoSkip: true,
+            maxTicksLimit: 7,
+            maxRotation: 0
+          }
+        },
+        y: {
+          display: true,
+          suggestedMin: 500000,
+          suggestedMax: 1750000,
+          border: { display: false },
+          grid: { display: false, drawBorder: false },
+          ticks: {
+            color: '#64748b',
+            maxTicksLimit: 4,
+            padding: 8,
+            callback: value => fmtRiders(value)
+          }
+        }
+      },
+      layout: { padding: { top: 14, right: 8, bottom: 0, left: 0 } }
+    }
+  });
+
+  animateLineReveal(riderChart, 1150);
+}
+
+/* Trigger line-draw animation exactly once when chart scrolls into view */
 const riderObs = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      riderChart.data.datasets[0].data = [1666000, 715471, 1274556];
-      riderChart.update();
+    if (entry.isIntersecting && !riderChart) {
+      createRidershipTimeline();
       riderObs.disconnect();
     }
   });
