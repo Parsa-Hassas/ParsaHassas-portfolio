@@ -255,6 +255,10 @@
     .proj-card:hover::before { opacity:1; }
 
     .proj-num { font-size:.7rem; font-weight:600; color:var(--accent); letter-spacing:.12em; margin-bottom:.7rem; }
+
+    /* Keep all project cards visually consistent */
+    .proj-card p, .proj-card .proj-sub, .proj-card .proj-lead, .proj-card .proj-finding, .proj-card .tag, .proj-card .proj-lnk, .proj-card .badge { font-family: 'Inter', sans-serif; }
+    .proj-card h3, .proj-card .proj-num { font-family: 'Space Grotesk', sans-serif; }
     .proj-title { font-size:1.38rem; margin-bottom:.4rem; }
     .proj-sub { font-size:.87rem; color:var(--accent-lt); font-weight:500; margin-bottom:1rem; }
 
@@ -498,7 +502,7 @@
         <a href="https://www.linkedin.com/in/parsa-hassassedighi" target="_blank" class="btn btn-ghost"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10" /></svg> LinkedIn</a>
       </div>
       <div class="hero-stats">
-        <div><div class="stat-val" data-target="2">0</div><div class="stat-lbl">Featured Projects</div></div>
+        <div><div class="stat-val" data-target="3">0</div><div class="stat-lbl">Featured Projects</div></div>
         <div><div class="stat-val" data-target="9">0</div><div class="stat-lbl">Certifications</div></div>
         <div><div class="stat-val" data-target="2">0</div><div class="stat-lbl">Degrees</div></div>
         <div><div class="stat-val" data-target="50000" data-suffix="K">0</div><div class="stat-lbl">Titles in ML Pipeline</div></div>
@@ -610,7 +614,7 @@
   <div class="container">
     <div class="eyebrow r">Featured Work</div>
     <h2 class="sec-title r">Projects</h2>
-    <p class="sec-sub r">A quick look at the two projects I’m most proud of. Each one started with a real question, went through the messy data work, and ended with something usable — models, dashboards, and insights that are easy to explain.</p>
+    <p class="sec-sub r">A quick look at three pieces of work I’m proud of. Each one started with a real question, went through the messy data work, and ended with something useful — a model, a dashboard, or a public-facing data story people can actually understand.</p>
 
     <div class="proj-grid">
 
@@ -688,6 +692,42 @@
           <span class="badge">Machine Learning</span>
         </div>
       </div>
+
+      <!-- ── Behind Closed Doors ── -->
+      <div class="proj-card r">
+        <div class="proj-num">PROJECT 03</div>
+        <h3 class="proj-title">Behind Closed Doors — Toronto Violence Data Story</h3>
+        <p class="proj-sub">Data Storytelling &nbsp;·&nbsp; Public Safety Analytics &nbsp;·&nbsp; Visualization &nbsp;·&nbsp; The Analyst</p>
+        <p class="proj-lead">
+          A public-facing data article for The Analyst that turns ten years of Toronto intimate partner and family violence records
+          into a clear story about persistence, place, timing, and prevention. The goal was not just to show charts, but to make the patterns
+          specific enough to understand and act on.
+        </p>
+
+        <div class="proj-finding">
+          <strong>Key finding:</strong> The most important pattern was not a sudden spike — it was the absence of change.
+          Toronto recorded roughly the same level of incidents year after year, with weekend peaks, residential concentration,
+          and current or former intimate partners accounting for most cases.
+        </div>
+
+        <div class="tags" style="margin-bottom:1.5rem;">
+          <span class="tag">Data Storytelling</span>
+          <span class="tag">Public Data</span>
+          <span class="tag">Tableau</span>
+          <span class="tag">Web Visualization</span>
+          <span class="tag">Research Writing</span>
+          <span class="tag">Policy Insight</span>
+        </div>
+
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="behind-closed-doors.html" class="proj-lnk case-study"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg> Read Case Study</a>
+            <a href="https://analyst-seneca.com/behind-closed-doors" target="_blank" class="proj-lnk"><svg class="link-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1em" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg> Published Article</a>
+          </div>
+          <span class="badge">Data Story</span>
+        </div>
+      </div>
+
 
     </div>
   </div>
